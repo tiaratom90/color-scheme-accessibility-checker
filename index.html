@@ -128,12 +128,12 @@ function createSwatch(text, bgColor, textColor) {
     function summarizeAccessibility(score, total) {
       let ratio = score / total;
       let level;
-      if (ratio >= .9) level = '🌈 Highly accessible!';
-      else if (ratio >= .7) level = '👍 Fairly accessible.';
-      else if (ratio >= .5) level = '🤔 Somewhat accessible.';
-      else if (ratio >= .3) level = '⚠️ Needs improvement.';
+      if (ratio >= .9) level = '🌈';
+      else if (ratio >= .7) level = '👍';
+      else if (ratio >= .5) level = '🤔';
+      else if (ratio >= .3) level = '⚠️';
       else level = '🚫 Not accessible.';
-      return `Out of ${total} combinations ${score} passed...\n${level}`;
+      return `Out of ${total} combinations ${score} passed.\n${level}`;
     }
 
     function checkColors() {

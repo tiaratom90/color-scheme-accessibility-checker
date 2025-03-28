@@ -114,16 +114,8 @@
     }
 
 function createSwatch(text, bgColor, textColor) {
-  const weights = [
-    "100", "200", "300", "400", "500", "600", "700", "800", "900"
-  ];
-  let weightedText = '';
-  for (let i = 0; i < text.length; i++) {
-    const weight = weights[Math.floor(i / text.length * weights.length)];
-    weightedText += `<span style='font-weight:${weight}'>${text[i]}</span>`;
-  }
-  return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${weightedText}</span>`;
-}
+      return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`;
+    }
 
     function summarizeAccessibility(score, total) {
       let ratio = score / total;

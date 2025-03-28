@@ -1,186 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colour Scheme Accessibility Checker</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colour Scheme Accessibility Checker</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="container">
-        <!-- Left Panel for Inputs -->
-        <div class="left-panel">
-            <p>Enter up to six hex codes below:</p>
-            <div class="input-group" id="inputs"></div>
-            <div class="button-group">
-                <button type="button" onclick="checkColors()">Check Contrast</button>
-                <button type="button" onclick="resetForm()">Reset</button>
-            </div>
-            <div id="summary"></div>
-        </div>
-
-        <!-- Right Panel for Results -->
-        <div class="right-panel">
-            <div id="results"></div>
-        </div>
+  <div class="container">
+    <!-- Left Panel for Inputs -->
+    <div class="left-panel">
+      <p>Enter up to six hex codes below:</p>
+      <div class="input-group" id="inputs"></div>
+      <div class="button-group">
+        <button type="button" onclick="checkColors()">Check Contrast</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+      </div>
+      <div id="summary"></div>
     </div>
 
-    <script>
-        const input = document.getElementById('input');
-            /*input.addEventListener('focus', function() {
-              this.placeholder = "#123ABC";
-        });*/
-        const resultsContainer = document.getElementById('results');
-        const summaryContainer = document.getElementById('summary');
+    <!-- Right Panel for Results -->
+    <div class="right-panel">
+      <div id="results"></div>
+    </div>
+  </div>
 
-        // Generate input fields dynamically
-        function generateInputFields() {
-            for (let i = 0; i < 6; i++) {
-                const inputWrapper = document.createElement('div');
-                inputWrapper.className = 'input-wrapper';
+  <script>
+    const inputContainer = document.getElementById('inputs');
+    const resultsContainer = document.getElementById('results');
+    const summaryContainer = document.getElementById('summary');
 
-                const labelElement = document.createElement('label');
-                labelElement.className = 'input'; // Apply the new CSS class
-                labelElement.setAttribute('for', `hex${i}`);
+    // Generate input fields dynamically
+    function generateInputFields() {
+      for (let i = 0; i < 6; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-wrapper';
 
-                const inputElement = document.createElement('input');
-                inputElement.type = 'text';
-                inputElement.id = `hex${i}`;
-                inputElement.placeholder = '&nbsp;'; // Required for the animation
+        const label = document.createElement('label');
+        label.textContent = `Colour ${i + 1}`;
+        label.setAttribute('for', `hex${i}`);
 
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'label'; // Style the label
-                labelSpan.textContent = `Colour ${i + 1}`;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '#123ABC';
+        input.id = `hex${i}`;
 
-                const focusBgSpan = document.createElement('span');
-                focusBgSpan.className = 'focus-bg'; // Style the focus background
+        const swatch = document.createElement('span');
+        swatch.className = 'swatch';
+        swatch.id = `swatch${i}`;
 
-                const swatch = document.createElement('span');
-                swatch.className = 'swatch'; // Keep the swatch for the color display
-                swatch.id = `swatch${i}`;
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(swatch);
+        inputContainer.appendChild(wrapper);
+      }
+    }
 
-                labelElement.appendChild(inputElement);
-                labelElement.appendChild(labelSpan);
-                labelElement.appendChild(focusBgSpan);
+    // Call the function to generate inputs on page load
+    generateInputFields();
 
-                inputWrapper.appendChild(labelElement);
-                inputWrapper.appendChild(swatch);
-                inputContainer.appendChild(inputWrapper);
-            }
+    function luminance(r, g, b) {
+      const a = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+
+    function contrast(rgb1, rgb2) {
+      const lum1 = luminance(...rgb1);
+      const lum2 = luminance(...rgb2);
+      const brightest = Math.max(lum1, lum2);
+      const darkest = Math.min(lum1, lum2);
+      return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(h => h + h).join('');
+      }
+      const bigint = parseInt(hex, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+
+    function checkCompliance(ratio) {
+      ratio = parseFloat(ratio);
+      const aa = ratio >= 4.5 ? '✅ Passes AA' : '❌ Fails AA';
+      const aaLarge = ratio >= 3 ? '✅ Passes AA Large' : '❌ Fails AA Large';
+      const aaa = ratio >= 7 ? '✅ Passes AAA' : '❌ Fails AAA';
+      return `${aa}, ${aaLarge}, ${aaa}`;
+    }
+
+    function createSwatch(text, bgColor, textColor) {
+      return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`;
+    }
+
+    function summarizeAccessibility(score, total) {
+      let ratio = score / total;
+      let level;
+      if (ratio >= .9) level = '🌈 Highly accessible!';
+      else if (ratio >= .7) level = '👍 Fairly accessible.';
+      else if (ratio >= .5) level = '🤔 Somewhat accessible.';
+      else if (ratio >= .3) level = '⚠️ Needs improvement.';
+      else level = '🚫 Not accessible.';
+      return `Out of ${total} combinations ${score} passed...\n${level}`;
+    }
+
+    function checkColors() {
+      try {
+        const hexes = [];
+        resultsContainer.innerHTML = '';
+        summaryContainer.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+          const input = document.getElementById(`hex${i}`);
+          const value = input.value.trim();
+          if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
+            hexes.push(value.startsWith('#') ? value : `#${value}`);
+            document.getElementById(`swatch${i}`).style.backgroundColor = value.startsWith('#') ? value : `#${value}`;
+          } else if (value !== '') {
+            alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
+            return;
+          }
+        }
+        if (hexes.length < 1) {
+          alert('Please enter at least one valid hex code.');
+          return;
         }
 
-        // Call the function to generate inputs on page load
-        generateInputFields();
+        // Results against black and white
+        let html = '<h2>Results Against Black and White</h2><table>';
+        hexes.forEach((color, index) => {
+          const ratioWhite = contrast(hexToRgb(color), hexToRgb('#FFFFFF'));
+          const ratioBlack = contrast(hexToRgb(color), hexToRgb('#000000'));
+          html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
+        });
+        html += '</table>';
 
-        function luminance(r, g, b) {
-            const a = [r, g, b].map(v => {
-                v /= 255;
-                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-            });
-            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        // Pairwise comparisons
+        html += '<h2>Pairwise Comparisons</h2><table>';
+        let passing = 0, total = 0;
+        for (let i = 0; i < hexes.length; i++) {
+          for (let j = i + 1; j < hexes.length; j++) {
+            const ratio = contrast(hexToRgb(hexes[i]), hexToRgb(hexes[j]));
+            html += `<tr><td>${createSwatch('Text', hexes[j], hexes[i])} on ${createSwatch('Background', hexes[i], hexes[j])}</td><td>${ratio}</td><td>${checkCompliance(ratio)}</td></tr>`;
+            total++;
+            if (ratio >= 4.5) passing++;
+          }
         }
+        html += '</table>';
+        resultsContainer.innerHTML = html;
+        summaryContainer.innerHTML = `<p>${summarizeAccessibility(passing, total)}</p>`;
+      } catch (e) {
+        alert('Error!');
+        console.error(e);
+      }
+    }
 
-        function contrast(rgb1, rgb2) {
-            const lum1 = luminance(...rgb1);
-            const lum2 = luminance(...rgb2);
-            const brightest = Math.max(lum1, lum2);
-            const darkest = Math.min(lum1, lum2);
-            return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
-        }
-
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            if (hex.length === 3) {
-                hex = hex.split('').map(h => h + h).join('');
-            }
-            const bigint = parseInt(hex, 16);
-            return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-        }
-
-        function checkCompliance(ratio) {
-            ratio = parseFloat(ratio);
-            const aa = ratio >= 4.5 ? '✅ Passes AA' : '❌ Fails AA';
-            const aaLarge = ratio >= 3 ? '✅ Passes AA Large' : '❌ Fails AA Large';
-            const aaa = ratio >= 7 ? '✅ Passes AAA' : '❌ Fails AAA';
-            return `${aa}, ${aaLarge}, ${aaa}`;
-        }
-
-        function createSwatch(text, bgColor, textColor) {
-            return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`;
-        }
-
-        function summarizeAccessibility(score, total) {
-            let ratio = score / total;
-            let level;
-            if (ratio >= .9) level = '🌈 Highly accessible!';
-            else if (ratio >= .7) level = '👍 Fairly accessible.';
-            else if (ratio >= .5) level = '🤔 Somewhat accessible.';
-            else if (ratio >= .3) level = '⚠️ Needs improvement.';
-            else level = '🚫 Not accessible.';
-            return `Out of ${total} combinations ${score} passed...\n${level}`;
-        }
-
-        function checkColors() {
-            try {
-                const hexes = [];
-                resultsContainer.innerHTML = '';
-                summaryContainer.innerHTML = '';
-                for (let i = 0; i < 6; i++) {
-                    const input = document.getElementById(`hex${i}`);
-                    const value = input.value.trim();
-                    if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
-                        hexes.push(value.startsWith('#') ? value : `#${value}`);
-                        document.getElementById(`swatch${i}`).style.backgroundColor = value.startsWith('#') ? value : `#${value}`; // Update swatch color
-                    } else if (value !== '') {
-                        alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
-                        return;
-                    }
-                }
-                if (hexes.length < 1) {
-                    alert('Please enter at least one valid hex code.');
-                    return;
-                }
-
-                // Results against black and white
-                let html = '<h2>Results Against Black and White</h2><table>';
-                hexes.forEach((color, index) => {
-                    const ratioWhite = contrast(hexToRgb(color), hexToRgb('#FFFFFF'));
-                    const ratioBlack = contrast(hexToRgb(color), hexToRgb('#000000'));
-                    html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
-                });
-                html += '</table>';
-
-                // Pairwise comparisons
-                html += '<h2>Pairwise Comparisons</h2><table>';
-                let passing = 0, total = 0;
-                for (let i = 0; i < hexes.length; i++) {
-                    for (let j = i + 1; j < hexes.length; j++) {
-                        const ratio = contrast(hexToRgb(hexes[i]), hexToRgb(hexes[j]));
-                        html += `<tr><td>${createSwatch('Text', hexes[j], hexes[i])} on ${createSwatch('Background', hexes[i], hexes[j])}</td><td>${ratio}</td><td>${checkCompliance(ratio)}</td></tr>`;
-                        total++;
-                        if (ratio >= 4.5) passing++;
-                    }
-                }
-                html += '</table>';
-                resultsContainer.innerHTML = html;
-                summaryContainer.innerHTML = `<p>${summarizeAccessibility(passing, total)}</p>`;
-            } catch (e) {
-                alert('Error!');
-                console.error(e);
-            }
-        }
-
-        function resetForm() {
-            for (let i = 0; i < 6; i++) {
-                document.getElementById(`hex${i}`).value = '';
-                document.getElementById(`swatch${i}`).style.backgroundColor = ''; // Reset swatch color
-            }
-            resultsContainer.innerHTML = '';
-            summaryContainer.innerHTML = '';
-        }
-    </script>
+    function resetForm() {
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`hex${i}`).value = '';
+        document.getElementById(`swatch${i}`).style.backgroundColor = '';
+      }
+      resultsContainer.innerHTML = '';
+      summaryContainer.innerHTML = '';
+    }
+  </script>
 </body>
-
 </html>

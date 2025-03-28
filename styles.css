@@ -8,6 +8,17 @@ body {
   height: 100vh;
 }
 
+h2 {
+  font-family: Diatype, sans-serif;
+  display: flex;
+  font-size: 1.8em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: normal;
+}
+
 .container {
   display: flex;
   flex: 1;

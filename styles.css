@@ -101,6 +101,9 @@ input[type=color] ::before {
 input[type=color]::-webkit-color-swatch {
   padding: 0;
   border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 

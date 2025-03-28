@@ -202,11 +202,12 @@ td {
 /* Pair swatch styles */
 .pair-swatch {
   display: inline-block;
+  font-family: Diatype, sans-serif;  
   padding: 8px 18px;
   border-radius: 8px;
-  background-color: #E5E5E5;
+  margin: 5px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  font-weight: Normal;
+  
 }
 
 /* Summary styles */

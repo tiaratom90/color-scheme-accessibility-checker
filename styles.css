@@ -47,8 +47,17 @@ body {
 
 .input-group input {
   width: 120px;
-  padding: 5px;
   display: inline-block;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  outline: none;
+  border-bottom: 0.2em solid #DDDDDD;
+  background: rgba(245, 245, 245, 0.2);
+  border-radius: 0.2em 0.2em 0 0;
+  padding: 0.4em;
+  color: #DDDDDD;
 }
 
 .input-group input::placeholder {

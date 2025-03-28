@@ -80,7 +80,7 @@ body {
 .button-group button::before {
   content: '';
   position: absolute;
-  inset: -2px; /* Border thickness */
+  inset: -6px; /* Border thickness */
   border-radius: inherit;
   background: linear-gradient(
     135deg,

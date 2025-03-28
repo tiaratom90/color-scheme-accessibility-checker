@@ -37,6 +37,8 @@ body {
 
 .input-group label {
   margin-right: 10px; /* Added spacing between labels and fields */
+  color: rgba(112,128,144, 1);
+  font-size: 92%;
 }
 
 .input-wrapper {

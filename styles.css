@@ -51,6 +51,12 @@ body {
   display: inline-block;
 }
 
+.input-group input::placeholder {
+  color: #999; /* Style for placeholder text */
+  font-style: italic;
+  font-size: 87.5%;
+}
+
 .input-group .swatch {
   display: inline-block;
   width: 20px;

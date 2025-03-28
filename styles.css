@@ -33,7 +33,7 @@ sub {
 }
 
 .left-panel, .right-panel {
-  padding: 20px;
+  padding: 80px;
   box-sizing: border-box;
   overflow-y: auto;
 }

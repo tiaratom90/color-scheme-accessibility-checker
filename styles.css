@@ -12,10 +12,6 @@ h1 {
   font-family: Diatype, sans-serif;
   display: flex;
   font-size: 1.5em;
-  margin-top: 0.83em;
-  margin-bottom: 0.83em;
-  margin-left: 0;
-  margin-right: 0;
   font-weight: normal;
 }
 
@@ -23,10 +19,6 @@ h2 {
   font-family: Diatype, sans-serif;
   display: flex;
   font-size: 1.3em;
-  margin-top: 0.83em;
-  margin-bottom: 0.83em;
-  margin-left: 0;
-  margin-right: 0;
   font-weight: normal;
 }
 

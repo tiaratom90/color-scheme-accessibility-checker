@@ -46,9 +46,9 @@
         input.id = `hex${i}`;
 
         const swatch = document.createElement('input');
-        colorPicker.type = 'color';
-        colorPicker.id = `swatch${i}`;
-        colorPicker.value = '#FFFFFF'; // Set default color
+        swatch.type = 'color';
+        swatch.id = `swatch${i}`;
+        swatch.value = '#FFFFFF'; // Set default color
 
         //dynamic swatches dependency
         input.addEventListener('input', function() {

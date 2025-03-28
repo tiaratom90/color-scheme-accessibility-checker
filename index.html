@@ -37,12 +37,12 @@
         wrapper.className = 'input-wrapper';
 
         const label = document.createElement('label');
-        label.textContent = `Colour ${i + 1}`;
+        label.textContent = ` ${i + 1}.`;
         label.setAttribute('for', `hex${i}`);
 
         const input = document.createElement('input');
         input.type = 'text';
-        input.placeholder = '123ABD';
+        input.placeholder = `Colour ${i + 1}`;
         input.id = `hex${i}`;
 
         const swatch = document.createElement('span');

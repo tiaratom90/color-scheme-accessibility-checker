@@ -51,7 +51,7 @@ body {
 }
 
 /* Input styles */
-.input {
+.input-group input {
   position: relative;
   width: 100%;
   max-width: 280px;
@@ -60,7 +60,7 @@ body {
   margin-right: 10px; /* Space between the animated input and swatch */
 }
 
-.input .label {
+.input-group label {
   position: absolute;
   top: 20px;
   left: 12px;
@@ -73,7 +73,7 @@ body {
   pointer-events: none;
 }
 
-.input .focus-bg {
+.input-group input :focus-bg {
   position: absolute;
   top: 0;
   left: 0;
@@ -85,7 +85,7 @@ body {
   transform-origin: left;
 }
 
-.input input {
+.input-group input: input {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
@@ -101,28 +101,28 @@ body {
   transition: all 0.15s ease;
 }
 
-.input input:hover {
+.input-group input:hover {
   background: rgba(var(--dark), 0.04);
   box-shadow: inset 0 -1px 0 rgba(var(--dark), 0.5);
 }
 
-.input input:not(:placeholder-shown) + .label {
+.input-group input:not(:placeholder-shown) + .label {
   color: rgba(var(--dark), 0.5);
   transform: translate3d(0, -12px, 0) scale(0.75);
 }
 
-.input input:focus {
+.input-group input:focus {
   background: rgba(var(--dark), 0.05);
   outline: none;
   box-shadow: inset 0 -2px 0 var(--primary);
 }
 
-.input input:focus + .label {
+.input-group input:focus + .label {
   color: var(--primary);
   transform: translate3d(0, -12px, 0) scale(0.75);
 }
 
-.input input:focus + .label + .focus-bg {
+.input-group input:focus + .label + .focus-bg {
   transform: scaleX(1);
   transition: all 0.1s ease;
 }

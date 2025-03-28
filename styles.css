@@ -203,6 +203,7 @@ td {
 .pair-swatch {
   display: inline-block;
   font-family: Diatype, sans-serif;  
+  font-size: normal;
   padding: 8px 18px;
   border-radius: 8px;
   margin: 5px;

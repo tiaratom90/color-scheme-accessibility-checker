@@ -1,0 +1,116 @@
+/* CSS file to style input fields and buttons */
+
+/* General styles */
+body {
+  font-family: Diatype, sans-serif;
+  margin: 0;
+  display: flex;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+}
+
+.left-panel, .right-panel {
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.left-panel {
+  width: 40%;
+}
+
+.right-panel {
+  width: 60%;
+}
+
+/* Input group styles */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  margin-right: 10px; /* Added spacing between labels and fields */
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Added spacing between rows */
+}
+
+.input-group input {
+  width: 120px;
+  padding: 5px;
+  display: inline-block;
+}
+
+.input-group .swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* Button group styles */
+.button-group {
+  margin-bottom: 20px;
+}
+
+.button-group button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.button-group button:hover {
+  background-color: #DDDDDD; /* Change background color on hover */
+  color: black;
+}
+
+/* Table styles */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+/* Pair swatch styles */
+.pair-swatch {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background-color: #E5E5E5;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
+/* Summary styles */
+#summary {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .left-panel, .right-panel {
+    width: 100%;
+  }
+}

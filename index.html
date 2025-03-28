@@ -28,7 +28,10 @@
     </div>
 
     <script>
-        const inputContainer = document.getElementById('inputs');
+        const input = document.getElementById('myInput');
+            input.addEventListener('focus', function() {
+              this.placeholder = "#123ABC";
+        });
         const resultsContainer = document.getElementById('results');
         const summaryContainer = document.getElementById('summary');
 

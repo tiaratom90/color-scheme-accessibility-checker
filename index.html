@@ -45,9 +45,30 @@
         input.placeholder = `Colour ${i + 1}`;
         input.id = `hex${i}`;
 
-        const swatch = document.createElement('span');
-        swatch.className = 'swatch';
-        swatch.id = `swatch${i}`;
+        const swatch = document.createElement('input');
+        colorPicker.type = 'color';
+        colorPicker.id = `swatch${i}`;
+        colorPicker.value = '#FFFFFF'; // Set default color
+
+        //dynamic swatches dependency
+        input.addEventListener('input', function() {
+          const value = input.value.trim();
+          if (/^#?[0-9A-Fa-f]{6}$/.test(value)) {
+            const hexValue = value.startsWith('#') ? value : `#${value}`;
+            swatch.value = hexValue;
+          }
+        });
+
+        swatch.addEventListener('input', function() {
+          input.value = swatch.value;
+        });
+        
+        
+
+        //old static swatches
+       // const swatch = document.createElement('span');
+        //swatch.className = 'swatch';
+        //swatch.id = `swatch${i}`;
 
         wrapper.appendChild(label);
         wrapper.appendChild(input);

@@ -82,11 +82,11 @@ input[type=color] {
   overflow: hidden;
 }
 
-input[type=color] ::before {
+/*input[type=color] ::before {
   content: '';
   position: absolute;
   inset: -8px; /* Border thickness */
-  border-radius: inherit;
+/*  border-radius: inherit;
   background: radial-gradient(
     circle at center,
     currentColor 0%,
@@ -96,7 +96,7 @@ input[type=color] ::before {
   mask: 
     radial-gradient(circle, transparent calc(100% - 2px), #fff calc(100% - 2px));
   mask-composite: exclude;
-}
+}*/
 
 input[type=color]::-webkit-color-swatch {
   border: none;

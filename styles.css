@@ -60,6 +60,23 @@ body {
   vertical-align: middle;
   box-shadow: 0px 2px 3px rgba(0,0,0,0.1);
   border: none; /* Ensures no border stroke */
+  overflow: hidden;
+}
+
+.input-group .swatch::before {
+  content: '';
+  position: absolute;
+  inset: -2px; /* Border thickness */
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    currentColor 0%,
+    color-mix(in srgb, currentColor 80%, black) 100%
+  );
+  z-index: -1;
+  mask: 
+    radial-gradient(circle, transparent calc(100% - 2px), #fff calc(100% - 2px));
+  mask-composite: exclude;
 }
 
 /* Button group styles */
@@ -75,6 +92,7 @@ body {
   background-color: #E5E5E5;
   box-shadow: 0px 2px 3px rgba(0,0,0,0.1);
   border: none;
+  overflow: hidden;
 }
 
 .button-group button::before {

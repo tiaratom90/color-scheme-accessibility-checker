@@ -183,6 +183,7 @@ function createSwatch(text, bgColor, textColor) {
     function resetForm() {
       for (let i = 0; i < 6; i++) {
         document.getElementById(`hex${i}`).value = '';
+        document.getElementById(`swatch${i}`).style.backgroundColor = '';
         document.getElementById(`swatch${i}`).value = '#FFFFFF';
       }
       resultsContainer.innerHTML = '';

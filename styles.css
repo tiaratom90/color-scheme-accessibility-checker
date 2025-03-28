@@ -27,62 +27,120 @@ body {
   width: 65%;
 }
 
-/* Input group styles */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.input-group label {
-  margin-right: 10px; /* Added spacing between labels and fields */
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px; /* Added spacing between rows */
-}
-
-.input-group input {
-  width: 120px;
-  padding: 5px;
-  display: inline-block;
-}
-
-.input-group input::placeholder {
-  color: #999; /* Style for placeholder text */
-  font-style: italic;
-  font-size: 87.5%;
-}
-
-.input-group .swatch {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-left: 10px;
-  vertical-align: middle;
-  box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-  border: none; /* Ensures no border stroke */
+/* Input styles */
+.input {
+  position: relative;
+  margin: auto;
+  width: 100%;
+  max-width: 280px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
-.input-group .swatch::before {
-  content: '';
+.input .label {
   position: absolute;
-  inset: -8px; /* Border thickness */
-  border-radius: inherit;
-  background: radial-gradient(
-    circle at center,
-    currentColor 0%,
-    color-mix(in srgb, currentColor 80%, black) 100%
-  );
+  top: 20px;
+  left: 12px;
+  font-size: 16px;
+  color: rgba(var(--dark),.5);
+  font-weight: 500;
+  transform-origin: 0 0;
+  transform: translate3d(0,0,0);
+  transition: all .2s ease;
+  pointer-events: none;
+}
+
+.input .focus-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(var(--dark),.05);
   z-index: -1;
-  mask: 
-    radial-gradient(circle, transparent calc(100% - 2px), #fff calc(100% - 2px));
-  mask-composite: exclude;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.input input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  border: 0;
+  font-family: inherit;
+  padding: 16px 12px 0 12px;
+  height: 56px;
+  font-size: 16px;
+  font-weight: 400;
+  background: rgba(var(--dark),.02);
+  box-shadow: inset 0 -1px 0 rgba(var(--dark),.3);
+  color: var(--dark);
+  transition: all .15s ease;
+}
+
+.input input:hover {
+  background: rgba(var(--dark),.04);
+  box-shadow: inset 0 -1px 0 rgba(var(--dark),.5);
+}
+
+.input input:not(:placeholder-shown) + .label {
+  color: rgba(var(--dark),.5);
+  transform: translate3d(0,-12px,0) scale(.75);
+}
+
+.input input:focus {
+  background: rgba(var(--dark),.05);
+  outline: none;
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+.input input:focus + .label {
+  color: var(--primary);
+  transform: translate3d(0,-12px,0) scale(.75);
+}
+
+.input input:focus + .label + .focus-bg {
+  transform: scaleX(1);
+  transition: all .1s ease;
+/* Existing input-group styling - this is important */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* New .input-wrapper to contain both the animated input and the swatch */
+.input-wrapper {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    margin-bottom: 10px;
+    width: 100%; /* Ensure full width */
+    justify-content: space-between; /* Push animated input and swatch to each end */
+}
+
+/* Swatch styles */
+.swatch {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+.swatch::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, currentColor 0%, color-mix(in srgb, currentColor 80%, black) 100%);
+    z-index: -1;
+    mask: radial-gradient(circle, transparent calc(100% - 2px), #fff calc(100% - 2px));
+    mask-composite: exclude;
 }
 
 /* Button group styles */

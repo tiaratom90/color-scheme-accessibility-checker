@@ -30,30 +30,43 @@
     const resultsContainer = document.getElementById('results');
     const summaryContainer = document.getElementById('summary');
 
-    // Generate input fields dynamically
+ // Generate input fields dynamically
     function generateInputFields() {
-      for (let i = 0; i < 6; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-wrapper';
+        for (let i = 0; i < 6; i++) {
+            const inputWrapper = document.createElement('div');
+            inputWrapper.className = 'input-wrapper';
 
-        const label = document.createElement('label');
-        label.textContent = `Colour ${i + 1}`;
-        label.setAttribute('for', `hex${i}`);
+            const labelElement = document.createElement('label');
+            labelElement.className = 'input'; // This is the .input from your css
+            labelElement.setAttribute('for', `hex${i}`);
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = '#123ABC';
-        input.id = `hex${i}`;
+            const inputElement = document.createElement('input');
+            inputElement.type = 'text';
+            inputElement.id = `hex${i}`;
+            inputElement.placeholder = '&nbsp;'; // Required for the effect
 
-        const swatch = document.createElement('span');
-        swatch.className = 'swatch';
-        swatch.id = `swatch${i}`;
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'label';
+            labelSpan.textContent = `Colour ${i + 1}`;
 
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        wrapper.appendChild(swatch);
-        inputContainer.appendChild(wrapper);
-      }
+            const focusBgSpan = document.createElement('span');
+            focusBgSpan.className = 'focus-bg';
+
+            const swatch = document.createElement('span');
+            swatch.className = 'swatch';
+            swatch.id = `swatch${i}`;
+
+            // Assemble the elements for the animated input
+            labelElement.appendChild(inputElement);
+            labelElement.appendChild(labelSpan);
+            labelElement.appendChild(focusBgSpan);
+
+            // Add animated input and swatch to input wrapper
+            inputWrapper.appendChild(labelElement);
+            inputWrapper.appendChild(swatch);
+
+            inputContainer.appendChild(inputWrapper);
+        }
     }
 
     // Call the function to generate inputs on page load

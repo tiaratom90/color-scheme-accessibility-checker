@@ -1,56 +1,13 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colour Scheme Accessibility Checker</title>
-  <style>
-    body { font-family: Diatype, sans-serif; margin: 0; display: flex; height: 100vh; }
-    .container { display: flex; flex: 1; }
-    .left-panel { width: 40%; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-    .right-panel { width: 60%; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-    .input-group { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 20px; }
-    .input-group label { margin-right: 10px; } /* Added spacing between labels and fields */
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px; /* Added spacing between rows */
-    }
-    .input-group input { width: 120px; padding: 5px; display: inline-block; }
-    .input-group .swatch {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-    .button-group { margin-bottom: 20px; }
-    .button-group button { margin-right: 10px; padding: 8px 12px; cursor: pointer; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    td { padding: 8px; text-align: left; } /* Removed alternating row colors */
-    .pair-swatch {
-      display: inline-block;
-      padding: 8px 18px;
-      border-radius: 8px;
-      background-color: #E5E5E5;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
-      font-weight: bold;
-    }
-
-.button-group button:hover { 
-  background-color: #DDDDDD; /* Change background color on hover */
-  color: black;
-}
-    #summary { font-weight: bold; margin-top: 10px; }
-    @media (max-width: 768px) {
-      .container { flex-direction: column; }
-      .left-panel, .right-panel { width: 100%; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
+  <div class="container">
     <!-- Left Panel for Inputs -->
     <div class="left-panel">
       <p>Enter up to six hex codes below:</p>
@@ -66,16 +23,16 @@
     <div class="right-panel">
       <div id="results"></div>
     </div>
-</div>
+  </div>
 
-<script>
-const inputContainer = document.getElementById('inputs');
-const resultsContainer = document.getElementById('results');
-const summaryContainer = document.getElementById('summary');
+  <script>
+    const inputContainer = document.getElementById('inputs');
+    const resultsContainer = document.getElementById('results');
+    const summaryContainer = document.getElementById('summary');
 
-// Generate input fields dynamically
-function generateInputFields() {
-    for (let i = 0; i < 6; i++) {
+    // Generate input fields dynamically
+    function generateInputFields() {
+      for (let i = 0; i < 6; i++) {
         const wrapper = document.createElement('div');
         wrapper.className = 'input-wrapper';
 
@@ -97,100 +54,117 @@ function generateInputFields() {
         wrapper.appendChild(swatch);
         inputContainer.appendChild(wrapper);
       }
-}
+    }
 
-// Call the function to generate inputs on page load
-generateInputFields();
+    // Call the function to generate inputs on page load
+    generateInputFields();
 
-function luminance(r, g, b) {
-    const a = [r, g, b].map(v => {
+    function luminance(r, g, b) {
+      const a = [r, g, b].map(v => {
         v /= 255;
         return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-    });
-    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
-}
-
-function contrast(rgb1, rgb2) {
-    const lum1 = luminance(...rgb1);
-    const lum2 = luminance(...rgb2);
-    const brightest = Math.max(lum1, lum2);
-    const darkest = Math.min(lum1, lum2);
-    return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
-}
-
-function hexToRgb(hex) {
-    hex = hex.replace('#', '');
-    if (hex.length === 3) {
-        hex = hex.split('').map(h => h + h).join('');
+      });
+      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
     }
-    const bigint = parseInt(hex,16);
-return[(bigint>>16)&255,(bigint>>8)&255,bigint&255];}
 
-function checkCompliance(ratio){
-ratio=parseFloat(ratio)
-const aa=ratio>=4.5?'✅ Passes AA':'❌ Fails AA'
-const aaLarge=ratio>=3?'✅ Passes AA Large':'❌ Fails AA Large'
-const aaa=ratio>=7?'✅ Passes AAA':'❌ Fails AAA'
-return`${aa}, ${aaLarge}, ${aaa}`
-}
+    function contrast(rgb1, rgb2) {
+      const lum1 = luminance(...rgb1);
+      const lum2 = luminance(...rgb2);
+      const brightest = Math.max(lum1, lum2);
+      const darkest = Math.min(lum1, lum2);
+      return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
+    }
 
-function createSwatch(text,bgColor,textColor){
-return`<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`}
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(h => h + h).join('');
+      }
+      const bigint = parseInt(hex, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
 
-function summarizeAccessibility(score,total){
-let ratio=score/total
-let level
-if(ratio>=.9)level='🌈 Highly accessible!'
-else if(ratio>=.7)level='👍 Fairly accessible.'
-else if(ratio>=.5)level='🤔 Somewhat accessible.'
-else if(ratio>=.3)level='⚠️ Needs improvement.'
-else level='🚫 Not accessible.'
-return`Out of ${total} combinations ${score} passed...\n${level}`}
-  
-function checkColors(){
-try{
-const hexes=[]
-resultsContainer.innerHTML=''
-summaryContainer.innerHTML=''
-for(let i=0;i<6;i++){
-const input=document.getElementById(`hex${i}`)
-const value=input.value.trim()
-if(/^#?[0-9A-Fa-f]{3,6}$/.test(value)){
-hexes.push(value.startsWith('#')?value:`#${value}`)
-document.getElementById(`swatch${i}`).style.backgroundColor=value.startsWith('#')?value:`#${value}`
-}else if(value!==''){
-alert(`Invalid hex code in Colour ${i+1}: "${value}"`)
-return}}
-if(hexes.length<1){
-alert('Please enter at least one valid hex code.')
-return}
+    function checkCompliance(ratio) {
+      ratio = parseFloat(ratio);
+      const aa = ratio >= 4.5 ? '✅ Passes AA' : '❌ Fails AA';
+      const aaLarge = ratio >= 3 ? '✅ Passes AA Large' : '❌ Fails AA Large';
+      const aaa = ratio >= 7 ? '✅ Passes AAA' : '❌ Fails AAA';
+      return `${aa}, ${aaLarge}, ${aaa}`;
+    }
 
-// Results against black and white
-let html='<h2>Results Against Black and White</h2><table>'
-hexes.forEach((color,index)=>{
-const ratioWhite=contrast(hexToRgb(color),hexToRgb('#FFFFFF'))
-const ratioBlack=contrast(hexToRgb(color),hexToRgb('#000000'))
-html+=`<tr><td>${createSwatch(`Colour ${index+1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index+1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Againt Black)</td></tr>`})
-html+='</table>'
+    function createSwatch(text, bgColor, textColor) {
+      return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`;
+    }
 
-// Pairwise comparisons
-html+='<h2>Pairwise Comparisons</h2><table>'
-let passing=0,total=0
-for(let i=0;i<hexes.length;i++){
-for(let j=i+1;j<hexes.length;j++){
-const ratio=contrast(hexToRgb(hexes[i]),hexToRgb(hexes[j]))
-html+=`<tr><td>${createSwatch('Text',hexes[j],hexes[i])} on ${createSwatch('Background',hexes[i],hexes[j])}</td><td>${ratio}</td><td>${checkCompliance(ratio)}</td></tr>`
-total++
-if(ratio>=4.5)passing++}}
-html+='</table>'
-resultsContainer.innerHTML=html
-summaryContainer.innerHTML=`<p>${summarizeAccessibility(passing,total)}</p>`}catch(e){alert('Error!');console.error(e)}}
-  
-function resetForm(){
-for(let i=0;i<6;i++){
-document.getElementById(`hex${i}`).value=''
-document.getElementById(`swatch${i}`).style.backgroundColor=''
-}
-resultsContainer.innerHTML=''
-summaryContainer.innerHTML=''}
-</script></body></html>
+    function summarizeAccessibility(score, total) {
+      let ratio = score / total;
+      let level;
+      if (ratio >= .9) level = '🌈 Highly accessible!';
+      else if (ratio >= .7) level = '👍 Fairly accessible.';
+      else if (ratio >= .5) level = '🤔 Somewhat accessible.';
+      else if (ratio >= .3) level = '⚠️ Needs improvement.';
+      else level = '🚫 Not accessible.';
+      return `Out of ${total} combinations ${score} passed...\n${level}`;
+    }
+
+    function checkColors() {
+      try {
+        const hexes = [];
+        resultsContainer.innerHTML = '';
+        summaryContainer.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+          const input = document.getElementById(`hex${i}`);
+          const value = input.value.trim();
+          if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
+            hexes.push(value.startsWith('#') ? value : `#${value}`);
+            document.getElementById(`swatch${i}`).style.backgroundColor = value.startsWith('#') ? value : `#${value}`;
+          } else if (value !== '') {
+            alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
+            return;
+          }
+        }
+        if (hexes.length < 1) {
+          alert('Please enter at least one valid hex code.');
+          return;
+        }
+
+        // Results against black and white
+        let html = '<h2>Results Against Black and White</h2><table>';
+        hexes.forEach((color, index) => {
+          const ratioWhite = contrast(hexToRgb(color), hexToRgb('#FFFFFF'));
+          const ratioBlack = contrast(hexToRgb(color), hexToRgb('#000000'));
+          html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
+        });
+        html += '</table>';
+
+        // Pairwise comparisons
+        html += '<h2>Pairwise Comparisons</h2><table>';
+        let passing = 0, total = 0;
+        for (let i = 0; i < hexes.length; i++) {
+          for (let j = i + 1; j < hexes.length; j++) {
+            const ratio = contrast(hexToRgb(hexes[i]), hexToRgb(hexes[j]));
+            html += `<tr><td>${createSwatch('Text', hexes[j], hexes[i])} on ${createSwatch('Background', hexes[i], hexes[j])}</td><td>${ratio}</td><td>${checkCompliance(ratio)}</td></tr>`;
+            total++;
+            if (ratio >= 4.5) passing++;
+          }
+        }
+        html += '</table>';
+        resultsContainer.innerHTML = html;
+        summaryContainer.innerHTML = `<p>${summarizeAccessibility(passing, total)}</p>`;
+      } catch (e) {
+        alert('Error!');
+        console.error(e);
+      }
+    }
+
+    function resetForm() {
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`hex${i}`).value = '';
+        document.getElementById(`swatch${i}`).style.backgroundColor = '';
+      }
+      resultsContainer.innerHTML = '';
+      summaryContainer.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

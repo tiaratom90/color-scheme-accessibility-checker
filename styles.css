@@ -53,7 +53,7 @@ body {
           appearance: none;
   border: none;
   outline: none;
-  border-bottom: 0.2em solid #708090;
+  border-bottom: 0.1em solid #708090;
   background: rgba(#708090, 0.2);
   border-radius: 0.2em 0.2em 0 0;
   padding: 0.4em;

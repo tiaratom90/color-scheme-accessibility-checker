@@ -5,22 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colour Scheme Accessibility Checker</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    input[type=color] {
-      padding: 0;
-      border: none;
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-    }
-    input[type=color]::-webkit-color-swatch {
-      border: none;
-      border-radius: 50%;
-    }
-    input[type=color]::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -53,7 +37,7 @@
         wrapper.className = 'input-wrapper';
 
         const label = document.createElement('label');
-        label.textContent = `${i + 1}`;
+        label.textContent = ` ${i + 1}.`;
         label.setAttribute('for', `hex${i}`);
 
         const input = document.createElement('input');
@@ -61,26 +45,13 @@
         input.placeholder = `Colour ${i + 1}`;
         input.id = `hex${i}`;
 
-        const colorPicker = document.createElement('input');
-        colorPicker.type = 'color';
-        colorPicker.id = `colorPicker${i}`;
-        colorPicker.value = '#FFFFFF'; // Set default color
-
-        input.addEventListener('input', function() {
-          const value = input.value.trim();
-          if (/^#?[0-9A-Fa-f]{6}$/.test(value)) {
-            const hexValue = value.startsWith('#') ? value : `#${value}`;
-            colorPicker.value = hexValue;
-          }
-        });
-
-        colorPicker.addEventListener('input', function() {
-          input.value = colorPicker.value;
-        });
+        const swatch = document.createElement('span');
+        swatch.className = 'swatch';
+        swatch.id = `swatch${i}`;
 
         wrapper.appendChild(label);
         wrapper.appendChild(input);
-        wrapper.appendChild(colorPicker);
+        wrapper.appendChild(swatch);
         inputContainer.appendChild(wrapper);
       }
     }
@@ -146,7 +117,7 @@
           const value = input.value.trim();
           if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
             hexes.push(value.startsWith('#') ? value : `#${value}`);
-            document.getElementById(`colorPicker${i}`).value = value.startsWith('#') ? value : `#${value}`;
+            document.getElementById(`swatch${i}`).style.backgroundColor = value.startsWith('#') ? value : `#${value}`;
           } else if (value !== '') {
             alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
             return;
@@ -162,7 +133,7 @@
         hexes.forEach((color, index) => {
           const ratioWhite = contrast(hexToRgb(color), hexToRgb('#FFFFFF'));
           const ratioBlack = contrast(hexToRgb(color), hexToRgb('#000000'));
-          html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White), ${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
+          html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
         });
         html += '</table>';
 
@@ -189,7 +160,7 @@
     function resetForm() {
       for (let i = 0; i < 6; i++) {
         document.getElementById(`hex${i}`).value = '';
-        document.getElementById(`colorPicker${i}`).value = '#FFFFFF'; // Reset to default color
+        document.getElementById(`swatch${i}`).style.backgroundColor = '';
       }
       resultsContainer.innerHTML = '';
       summaryContainer.innerHTML = '';

@@ -25,7 +25,7 @@ h2 {
 sub {
   font-family: Inclusive Sans, sans-serif;
   font-style: normal;
-  color: #708090;
+  color: #52546b;
 }
 
 .container {
@@ -79,7 +79,11 @@ sub {
   background: #f0f2f4;
   border-radius: 8px 8px 0 0;
   padding: 0.4em;
-  color: #8a99a8;
+  color: rgba(82,84,107,60%);
+}
+
+input:hover::placeholder {
+  color: #52546b; 
 }
 
 .input-group input::placeholder {
@@ -87,6 +91,10 @@ sub {
   color: #564974; 
   font-style: italic;
   font-size: 87.5%;
+}
+
+input[type="text"] {
+  color: black; /* Change the text color to black */
 }
 
 input[type=color] {

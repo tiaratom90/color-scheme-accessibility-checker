@@ -25,7 +25,7 @@ h2 {
 sub {
   font-family: Inclusive Sans, sans-serif;
   font-style: normal;
-  color: #f0f2f4;
+  color: #708090;
 }
 
 .container {
@@ -58,7 +58,6 @@ sub {
 .input-group label {
   font-family: Inclusive Sans, sans-serif;
   margin-right: 10px; /* Added spacing between labels and fields */
-  color: rgba(112,128,144, 1);
   font-size: 92%;
 }
 
@@ -86,7 +85,7 @@ sub {
 .input-group input::placeholder {
   font-family: Inclusive Sans, sans-serif;
   color: #564974; 
-  font-style: normal;
+  font-style: italic;
   font-size: 87.5%;
 }
 

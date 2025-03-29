@@ -80,18 +80,20 @@ sub {
   background: #f0f2f4;
   border-radius: 8px 8px 0 0;
   padding: 0.4em;
-  color: rgba(82,84,107,60%);
+  color: black;
+}
+
+
+
+.input-group input::placeholder {
+  font-family: Inclusive Sans, sans-serif;
+  color: rgba(82,84,107,60%); 
+  font-style: italic;
+  font-size: 87.5%;
 }
 
 input:hover::placeholder {
   color: #52546b; 
-}
-
-.input-group input::placeholder {
-  font-family: Inclusive Sans, sans-serif;
-  color: #564974; 
-  font-style: italic;
-  font-size: 87.5%;
 }
 
 input[type="text"] {

@@ -4,85 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Colour Scheme Accessibility Checker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inclusive+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <!-- Left Panel for Inputs -->
-    <div class="left-panel">
-      <h1>Colour Scheme Contrast Accessibility Checker</h1>
-      <p>Enter your hex codes bellow:</p>
-      <div class="input-group" id="inputs"></div>
-      <sub>Enter up to 6 colors. No need to include Black and White</sub>
-      <div class="button-group">
-        <button type="button" onclick="checkColors()">Check Contrast</button>
-        <button type="button" onclick="resetForm()">Reset</button>
-      </div>
-      <div id="summary"></div>
+  
+
+  
+   <!--Left Panel for Inputs -->
+        <div class="left-panel">  <h1>Colour Scheme Contrast Accessibility Checker</h1>
+            <p>Enter your hex codes below:</p>
+            <div class="input-group" id="inputs"></div>
+            <sub>Enter up to 6 colors. No need to include Black and White</sub>
+            <div class="button-group">
+              <button type="button" onclick="checkColors()">Check Contrast</button>
+              <button type="button" onclick="resetForm()">Reset</button>
+            </div>
+            <div id="summary"></div>
+          </div>
+
+    <!-- Right Panel for Results -->    
+        <div class="right-panel"> 
+            <div id="results"></div>
+          </div>
+        </div>
     </div>
+        <script>
+            const inputs = document.getElementById('inputs');
+            const results = document.getElementById('results');
+            const summary = document.getElementById('summary');
 
-    <!-- Right Panel for Results -->
-    <div class="right-panel">
-      <div id="results"></div>
-    </div>
-  </div>
 
-  <script>
-    const inputContainer = document.getElementById('inputs');
-    const resultsContainer = document.getElementById('results');
-    const summaryContainer = document.getElementById('summary');
+    //Generate Input Fields
+        function generateInputFields() {
+             for (let i = 0; i < 6; i++) {
+            const wrap = document.createElement('div');
+            wrap.className = 'input-wrapper';
 
-    // Generate input fields dynamically
-    function generateInputFields() {
-      for (let i = 0; i < 6; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-wrapper';
+            const label = document.createElement('label');
+            label.textContent = `${i + 1}.`;
+            label.setAttribute('for', `hex${i}`);
 
-        const label = document.createElement('label');
-        label.textContent = ` ${i + 1}.`;
-        label.setAttribute('for', `hex${i}`);
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = `Colour ${i + 1}`;
+            input.id = `hex${i}`;
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = `Colour ${i + 1}`;
-        input.id = `hex${i}`;
+            const swatch = document.createElement('input');
+            swatch.type = 'color';
+            swatch.id = `swatch${i}`;
+            swatch.value = '#FFFFFF';
 
-        const swatch = document.createElement('input');
-        swatch.type = 'color';
-        swatch.id = `swatch${i}`;
-        swatch.value = '#FFFFFF'; // Set default color
-
-        //dynamic swatches dependency
-        input.addEventListener('input', function() {
-          const value = input.value.trim();
-          if (/^#?[0-9A-Fa-f]{6}$/.test(value)) {
-            const hexValue = value.startsWith('#') ? value : `#${value}`;
-            swatch.value = hexValue;
-          }
-        });
-
-        swatch.addEventListener('input', function() {
-          input.value = swatch.value;
-        });
-        
-        
-
-        //old static swatches
-       // const swatch = document.createElement('span');
-        //swatch.className = 'swatch';
-        //swatch.id = `swatch${i}`;
-
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        wrapper.appendChild(swatch);
-        inputContainer.appendChild(wrapper);
+    // Sync input <-> swatch
+            input.addEventListener('input', () => {
+            const val = input.value.trim();
+            if (/^#?[0-9A-Fa-f]{6}$/.test(val)) {
+                swatch.value = val.startsWith('#') ? val : `#${val}`;
       }
-    }
+    });
 
-    // Call the function to generate inputs on page load
-    generateInputFields();
+            swatch.addEventListener('input', () => {
+                input.value = swatch.value;
+    });
 
-    function luminance(r, g, b) {
+            wrap.append(label, input, swatch);
+            inputs.appendChild(wrap);
+  }
+}
+
+// Call the function to generate inputs on page load
+generateInputFields();
+
+// Check Contrast Function
+
+function luminance(r, g, b) {
       const a = [r, g, b].map(v => {
         v /= 255;
         return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
@@ -108,87 +106,171 @@
     }
 
     function checkCompliance(ratio) {
-      ratio = parseFloat(ratio);
-      const aa = ratio >= 4.5 ? '✅ Passes AA' : '❌ Fails AA';
-      const aaLarge = ratio >= 3 ? '✅ Passes AA Large' : '❌ Fails AA Large';
-      const aaa = ratio >= 7 ? '✅ Passes AAA' : '❌ Fails AAA';
-      return `${aa}, ${aaLarge}, ${aaa}`;
+  ratio = parseFloat(ratio);
+
+  const format = (label, condition) =>
+
+    `<div class="${condition ? 'pass' : 'fail'}">${condition ? '✔' : '✖'} ${label}</div>`;
+
+  const aaa = format('AAA', ratio >= 7);
+  const aa = format('AA', ratio >= 4.5);
+  const aaLarge = format('AA Large', ratio >= 3);
+
+  return `${aaa}${aa}${aaLarge}`;
+}
+
+
+function createSwatchGroup(colorA, indexA, allHexes) {
+  let groupHTML = `
+    <div class="swatch-group">
+      <div class="swatch-group-title">
+        <span class="swatch-group-name">Color ${indexA + 1}</span>
+        <span class="swatch-group-hex">${colorA}</span>
+      </div>
+      <div class="swatch-group-body">
+  `;
+
+  for (let j = 0; j < allHexes.length; j++) {
+    const colorB = allHexes[j];
+    if (colorB === colorA) continue;
+
+    const ratio = contrast(hexToRgb(colorA), hexToRgb(colorB));
+    const compliance = checkCompliance(ratio);
+
+    let nameB;
+    if (colorB.toUpperCase() === '#FFFFFF') {
+      nameB = 'White';
+    } else if (colorB.toUpperCase() === '#000000') {
+      nameB = 'Black';
+    } else {
+      nameB = `Color ${j - 1}`; // Adjust if needed
     }
 
-function createSwatch(text, bgColor, textColor) {
-      return `<span class='pair-swatch' style='background:${bgColor};color:${textColor}'>${text}</span>`;
-    }
+    const block = createSwatchBlock(colorA, colorB, ratio, nameB, compliance);
+    groupHTML += block;
+  }
 
-    function summarizeAccessibility(score, total) {
-      let ratio = score / total;
-      let level;
-      if (ratio >= .9) level = '🌈';
-      else if (ratio >= .7) level = '👍';
-      else if (ratio >= .5) level = '🤔';
-      else if (ratio >= .3) level = '⚠️';
-      else level = '🚫';
-      return `Out of ${total} combinations ${score} passed.\n${level}`;
-    }
+  groupHTML += `</div></div>`;
+  return groupHTML;
+}
 
-    function checkColors() {
-      try {
-        const hexes = [];
-        resultsContainer.innerHTML = '';
-        summaryContainer.innerHTML = '';
-        for (let i = 0; i < 6; i++) {
-          const input = document.getElementById(`hex${i}`);
-          const value = input.value.trim();
-          if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
-            hexes.push(value.startsWith('#') ? value : `#${value}`);
-            document.getElementById(`swatch${i}`).style.backgroundColor = value.startsWith('#') ? value : `#${value}`;
-          } else if (value !== '') {
-            alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
-            return;
-          }
-        }
-        if (hexes.length < 1) {
-          alert('Please enter at least one valid hex code.');
-          return;
-        }
 
-        // Results against black and white
-        let html = '<h2>Results Against Black and White</h2><table>';
-        hexes.forEach((color, index) => {
-          const ratioWhite = contrast(hexToRgb(color), hexToRgb('#FFFFFF'));
-          const ratioBlack = contrast(hexToRgb(color), hexToRgb('#000000'));
-          html += `<tr><td>${createSwatch(`Colour ${index + 1}`, '#FFFFFF', color)}</td><td>${createSwatch(`Colour ${index + 1}`, '#000000', color)}</td><td>${checkCompliance(ratioWhite)} (Against White)<br>${checkCompliance(ratioBlack)} (Against Black)</td></tr>`;
-        });
-        html += '</table>';
 
-        // Pairwise comparisons
-        html += '<h2>Pairwise Comparisons</h2><table>';
-        let passing = 0, total = 0;
-        for (let i = 0; i < hexes.length; i++) {
-          for (let j = i + 1; j < hexes.length; j++) {
-            const ratio = contrast(hexToRgb(hexes[i]), hexToRgb(hexes[j]));
-            html += `<tr><td>${createSwatch('Text', hexes[j], hexes[i])} on ${createSwatch('Background', hexes[i], hexes[j])}</td><td>${ratio}</td><td>${checkCompliance(ratio)}</td></tr>`;
-            total++;
-            if (ratio >= 4.5) passing++;
-          }
-        }
-        html += '</table>';
-        resultsContainer.innerHTML = html;
-        summaryContainer.innerHTML = `<p>${summarizeAccessibility(passing, total)}</p>`;
-      } catch (e) {
-        alert('Error!');
-        console.error(e);
+function createSwatchBlock(colorA, colorB, ratio, nameB, compliance) {
+  return `
+    <div class="swatch-block">
+      <div class="swatch-ratio">${ratio}:1</div>
+      <div class="swatch-stack">
+        <div class="swatch-top" style="background:${colorA}; color:${colorB}">Aa</div>
+        <div class="swatch-bottom" style="background:${colorB}; color:${colorA}">Aa</div>
+      </div>
+      <div class="swatch-label">${nameB}</div>
+      <div class="swatch-hex">${colorB}</div>
+      <div class="swatch-compliance">${compliance}</div>
+    </div>
+  `;
+}
+
+
+
+function summarizeAccessibility(scoreObj, total) {
+  const { aaa, aa, aaLarge } = scoreObj;
+
+  return `
+    <p><strong>${aaa}</strong> out of ${total} combinations pass <strong>AAA</strong></p>
+    <p><strong>${aa}</strong> out of ${total} combinations pass <strong>AA</strong></p>
+    <p><strong>${aaLarge}</strong> out of ${total} combinations pass <strong>AA Large</strong></p>
+  `;
+}
+
+
+function checkColors() {
+  try {
+    const hexes = [];
+    results.innerHTML = '';
+    summary.innerHTML = '';
+
+    // 1. Gather and validate user input
+    for (let i = 0; i < 6; i++) {
+      const input = document.getElementById(`hex${i}`);
+      const value = input.value.trim();
+      if (/^#?[0-9A-Fa-f]{3,6}$/.test(value)) {
+        const hex = value.startsWith('#') ? value : `#${value}`;
+        hexes.push(hex);
+        document.getElementById(`swatch${i}`).style.backgroundColor = hex;
+      } else if (value !== '') {
+        alert(`Invalid hex code in Colour ${i + 1}: "${value}"`);
+        return;
       }
     }
 
-    function resetForm() {
-      for (let i = 0; i < 6; i++) {
-        document.getElementById(`hex${i}`).value = '';
-        document.getElementById(`swatch${i}`).style.backgroundColor = '';
-        document.getElementById(`swatch${i}`).value = '#FFFFFF';
-      }
-      resultsContainer.innerHTML = '';
-      summaryContainer.innerHTML = '';
+    if (hexes.length < 1) {
+      alert('Please enter at least one valid hex code.');
+      return;
     }
-  </script>
+
+    const allHexes = ['#FFFFFF', '#000000', ...hexes];
+
+    // ✅ 2. Build swatch groups using createSwatchGroup()
+    let html = '<h2></h2>';
+
+    hexes.forEach((colorA, i) => {
+      html += createSwatchGroup(colorA, i, allHexes);
+    });
+
+    results.innerHTML = html;
+
+    // ✅ 3. Tally passing combinations
+    let total = 0;
+    let passCounts = {
+      aaa: 0,
+      aa: 0,
+      aaLarge: 0
+    };
+
+    hexes.forEach(colorA => {
+      allHexes.forEach(colorB => {
+        if (colorA === colorB) return;
+        if (
+          (colorA === '#FFFFFF' && colorB === '#000000') ||
+          (colorA === '#000000' && colorB === '#FFFFFF')
+        ) return;
+
+        const ratio = parseFloat(contrast(hexToRgb(colorA), hexToRgb(colorB)));
+        total++;
+
+        if (ratio >= 7) passCounts.aaa++;
+        if (ratio >= 4.5) passCounts.aa++;
+        if (ratio >= 3) passCounts.aaLarge++;
+      });
+    });
+
+    summary.innerHTML = summarizeAccessibility(passCounts, total);
+
+  } catch (e) {
+    alert('Error!');
+    console.error(e);
+  }
+}
+
+function resetForm() {
+  for (let i = 0; i < 6; i++) {
+    const textInput = document.getElementById(`hex${i}`);
+    const colorInput = document.getElementById(`swatch${i}`);
+
+    textInput.value = '';
+    colorInput.value = '#FFFFFF'; // Reset color swatch to white
+    colorInput.style.backgroundColor = ''; // Remove manual override if any
+  }
+
+  results.innerHTML = '';
+  summary.innerHTML = '';
+
+  // Optional: focus back on the first input
+  document.getElementById('hex0').focus();
+}
+
+
+</script>
 </body>
 </html>

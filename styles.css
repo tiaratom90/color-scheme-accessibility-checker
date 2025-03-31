@@ -6,12 +6,12 @@
   }
 
   .left-panel {
-    width: 35%;
-    padding: 40px;
+    width: 30%;
+    padding-left: 40px;
   }
   .right-panel {
-    width: 65%;
-    padding: 40px;
+    width: 70%;
+    padding-left: 40px;
   }
 
   @media (max-width: 768px) {
@@ -213,7 +213,7 @@
     display: flex;
     font-family: 'DM Mono', monospace;
     flex-direction: column;
-    width: 100px;
+    width: 80px;
     border-radius: 0px;
     font-family: 'Inclusive Sans', sans-serif;
   }
@@ -267,20 +267,20 @@
     font-family: 'DM Mono', monospace;
     font-weight: 400;
     font-size: 0.75em;
-    text-align: right;
+    text-align: center;
     margin-bottom: 0px;
-    margin-right: 4px;
+    margin-left: 0px;
     color: #555;
   }
   
   .swatch-hex {
     text-transform: uppercase;
     font-family: 'DM Mono', monospace;
-    font-size: 0.6em;
-    text-align: right;
+    font-size: 0.55em;
+    text-align: center;
     color: #777;
-    margin-bottom: 2px;
-    margin-right: 4px;
+    margin-bottom: 5px;
+    margin-left: 0px;
   }
   
   /* --- WCAG Compliance Info --- */
@@ -312,7 +312,6 @@
     font-size: 0.85em;
     color: #333;
     line-height: 1;
-
     font-style: normal;
   }
   

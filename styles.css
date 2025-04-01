@@ -182,13 +182,13 @@
   }
   
   .swatch-group-name {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     font-weight: normal;
   }
   
   .swatch-group-hex {
  
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     margin-left: 8px;
     text-transform: uppercase;
     color: #555;
@@ -211,7 +211,7 @@
   /* --- Individual Swatch Block --- */
   .swatch-block {
     display: flex;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     flex-direction: column;
     width: 80px;
     border-radius: 0px;
@@ -221,7 +221,7 @@
   /* --- Title above stack --- */
   .swatch-ratio {
     font-size: 0.75em;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     font-weight: 400;
     text-align: center;
     color: #555;
@@ -264,7 +264,7 @@
   
   /* --- Swatch Labels --- */
   .swatch-label {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     font-weight: 400;
     font-size: 0.75em;
     text-align: center;
@@ -275,7 +275,7 @@
   
   .swatch-hex {
     text-transform: uppercase;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     font-size: 0.55em;
     text-align: center;
     color: #777;
@@ -285,7 +285,7 @@
   
   /* --- WCAG Compliance Info --- */
   .swatch-compliance {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     font-size: 0.65em;
    margin-left: 8px;
    margin-bottom: 8px;
@@ -293,12 +293,12 @@
     line-height: 1;
   }
   .swatch-compliance .pass {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     color: green;
     font-weight: 600;
   }
   .swatch-compliance .fail {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Arimo', sans-serif;
     color: red;
     font-weight: 400;
   }
